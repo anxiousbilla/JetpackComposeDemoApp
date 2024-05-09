@@ -1,10 +1,16 @@
 package com.example.jetpackcomposedemoapp
 
+import android.Manifest
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.with
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -15,29 +21,51 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.rememberDrawerState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,11 +77,14 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
@@ -62,31 +93,27 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
-import com.example.jetpackcomposedemoapp.ui.theme.JetpackComposeDemoAppTheme
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import android.Manifest
-import androidx.compose.foundation.layout.offset
-import androidx.compose.material3.Button
-import androidx.compose.material3.Slider
-import androidx.compose.material3.TextField
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.constraintlayout.compose.MotionLayout
 import androidx.constraintlayout.compose.MotionScene
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import com.example.jetpackcomposedemoapp.appBarAndNavigationDrawer.AppBar
+import com.example.jetpackcomposedemoapp.appBarAndNavigationDrawer.DrawerBody
+import com.example.jetpackcomposedemoapp.appBarAndNavigationDrawer.DrawerHeader
+import com.example.jetpackcomposedemoapp.appBarAndNavigationDrawer.MenuItem
 import com.example.jetpackcomposedemoapp.data.SampleData
 import com.example.jetpackcomposedemoapp.navigation.BottomNavigationBars
 import com.example.jetpackcomposedemoapp.navigation.Navigation
 import com.example.jetpackcomposedemoapp.navigation.Screen
-import com.example.jetpackcomposedemoapp.ui.spacing
+import com.example.jetpackcomposedemoapp.ui.theme.JetpackComposeDemoAppTheme
 import com.example.jetpackcomposedemoapp.utils.ListItem
 import com.example.jetpackcomposedemoapp.utils.WindowInfo
 import com.example.jetpackcomposedemoapp.utils.rememberWindowInfo
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -97,7 +124,7 @@ class MainActivity : ComponentActivity() {
                     color = Color.Transparent,
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(MaterialTheme.spacing.small)
+//                        .padding(MaterialTheme.spacing.small)
                 ) {
                     Navigation()
                 }
@@ -597,6 +624,12 @@ fun BottomNavigationBarScreen(navController: NavHostController) {
 @Composable
 fun MainScreen(navController: NavController) {
     var text by remember { mutableStateOf("") }
+    Text(
+        modifier = Modifier
+            .padding(top = 20.dp),
+        textAlign = TextAlign.Center,
+        text = "MainScreen"
+    )
     Column(
         verticalArrangement = Arrangement.Center,
         modifier = Modifier
@@ -624,11 +657,247 @@ fun MainScreen(navController: NavController) {
 }
 
 @Composable
-fun DetailsScreen(name: String?) {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier.fillMaxSize()
+fun DetailsScreen(navController: NavHostController, name: String?) {
+    Column(
+        modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Hello $name")
+        Skeleton(
+            navController,
+            "DetailsScreen",
+            Screen.AnimatedCounterScreen.route
+        )
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Text(text = "Hello $name")
+        }
     }
 }
+
+@Composable
+fun AnimatedCounterScreen(navController: NavHostController) {
+    var count by remember { mutableStateOf(0) }
+    Column(
+        modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Skeleton(navController, "AnimatedCounterScreen", Screen.LazyGridScreen.route)
+        AnimatedCounter(
+            count = count,
+            style = MaterialTheme.typography.bodyMedium
+        )
+        Button(
+            onClick = { count++ }
+        ) {
+            Text(text = "Increment")
+        }
+    }
+}
+
+@OptIn(ExperimentalAnimationApi::class)
+@Composable
+fun AnimatedCounter(
+    count: Int,
+    modifier: Modifier = Modifier,
+    style: TextStyle = MaterialTheme.typography.bodyMedium
+) {
+    var oldCount by remember {
+        mutableStateOf(count)
+    }
+    SideEffect {
+        oldCount = count
+    }
+    Row(modifier = modifier) {
+        val countString = count.toString()
+        val oldCountString = oldCount.toString()
+        for (i in countString.indices) {
+            val oldChar = oldCountString.getOrNull(i)
+            val newChar = countString[i]
+            val char = if (oldChar == newChar) {
+                oldCountString[i]
+            } else {
+                countString[i]
+            }
+            AnimatedContent(
+                targetState = char,
+                transitionSpec = { slideInVertically { it } with slideOutVertically { -it } }
+            ) { char ->
+                Text(text = char.toString(), style = style, softWrap = false)
+            }
+        }
+    }
+}
+
+@Composable
+fun LazyGrid(navController: NavHostController) {
+    val scope = rememberCoroutineScope()
+    val gridState = rememberLazyGridState(initialFirstVisibleItemIndex = 99)
+    scope.launch { gridState.animateScrollToItem(99) }
+    Column(
+        modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Skeleton(navController, "LazyGrid", Screen.TopAppBarScreen.route)
+        LazyVerticalGrid(
+            state = gridState,
+            columns = GridCells.Adaptive(100.dp),
+            content = {
+                items(100) { i ->
+                    Box(
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .aspectRatio(1f)
+                            .clip(
+                                RoundedCornerShape(5.dp)
+                            )
+                            .background(Color.Blue),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(text = "Item $i")
+                    }
+                }
+            }
+        )
+    }
+}
+
+@Composable
+fun TopAppBar(navController: NavHostController) {
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        scrimColor = Color.Blue,
+        gesturesEnabled = drawerState.isOpen,
+        drawerContent = {
+            Column {
+                DrawerHeader()
+                DrawerBody(
+                    items = listOf(
+                        MenuItem(
+                            id = "home",
+                            title = "Home",
+                            contentDescription = "go to home screen",
+                            icon = Icons.Default.Home
+                        ),
+                        MenuItem(
+                            id = "mail",
+                            title = "Mail",
+                            contentDescription = "go to mails screen",
+                            icon = Icons.Default.Email
+                        ),
+                        MenuItem(
+                            id = "settings",
+                            title = "Settings",
+                            contentDescription = "go to settings",
+                            icon = Icons.Default.Settings
+                        )
+                    )
+                ) {}
+            }
+        }) {
+        Scaffold(topBar = {
+            AppBar(onNavigationItemClick = {
+                scope.launch { drawerState.open() }
+            })
+        }) { innerPadding ->
+            Modifier.padding(innerPadding)
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 300.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    modifier = Modifier.padding(end = 50.dp), text = "TopAppBar"
+                )
+                Button(onClick = {
+                    navController.navigate(Screen.BottomSheetScreen.route)
+                }) {
+                    Text(text = "Next Screen")
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun BottomSheetScreen() {
+    var showBottomSheet by remember {
+        mutableStateOf(false)
+    }
+    if (showBottomSheet) {
+        BottomSheet {
+            showBottomSheet = false
+        }
+    }
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
+    ) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.TopCenter
+        ) {
+            Button(onClick = {
+                showBottomSheet = true
+            }) {
+                Text(text = "Toggle bottom sheet")
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun BottomSheet(onDismiss: () -> Unit) {
+    val modalSheetState = rememberModalBottomSheetState()
+    ModalBottomSheet(
+        onDismissRequest = { onDismiss() },
+        sheetState = modalSheetState,
+        contentColor = Color.White,
+        containerColor = Color.Black
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(300.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "Bottom sheet"
+            )
+        }
+    }
+}
+
+//@OptIn(ExperimentalMaterial3Api::class)
+//@Composable
+//fun MyBottomSheet() {
+//    BottomSheetScaffold(
+//        sheetContent = {
+//            Box(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .height(300.dp),
+//                contentAlignment = Alignment.Center
+//            ) {
+//                Text(
+//                    text = "Bottom sheet",
+//                    color = Color.White,
+//                    fontSize = 30.sp
+//                )
+//            }
+//        },
+//        sheetContainerColor = Color.Black
+//    ) {
+//        Box(
+//            modifier = Modifier.fillMaxSize(),
+//            contentAlignment = Alignment.TopCenter
+//        ) {
+//            Button(onClick = {}) {
+//                Text(text = "Toggle bottom sheet")
+//            }
+//        }
+//    }
+//}

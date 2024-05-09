@@ -15,6 +15,10 @@ sealed class Screen(val route: String) {
     object BottomNavigationBarScreen : Screen("bottom_navigation_bar_screen")
     object MainScreen : Screen("main_screen")
     object DetailsScreen : Screen("details_screen")
+    object AnimatedCounterScreen : Screen("animated_counter_screen")
+    object LazyGridScreen : Screen("lazy_grid_screen")
+    object TopAppBarScreen : Screen("top_app_bar_screen")
+    object BottomSheetScreen : Screen("bottom_sheet_screen")
 
     fun withArgs(vararg args: String): String {
         return buildString {

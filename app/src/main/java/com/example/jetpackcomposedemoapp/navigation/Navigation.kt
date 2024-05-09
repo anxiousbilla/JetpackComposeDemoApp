@@ -1,34 +1,18 @@
 package com.example.jetpackcomposedemoapp.navigation
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.jetpackcomposedemoapp.AnimatedCounterScreen
 import com.example.jetpackcomposedemoapp.BottomNavigationBarScreen
+import com.example.jetpackcomposedemoapp.BottomSheetScreen
 import com.example.jetpackcomposedemoapp.CircularProgressBarScreen
 import com.example.jetpackcomposedemoapp.DetailsScreen
 import com.example.jetpackcomposedemoapp.ImageCardScreen
 import com.example.jetpackcomposedemoapp.LazyColumn
+import com.example.jetpackcomposedemoapp.LazyGrid
 import com.example.jetpackcomposedemoapp.MainScreen
 import com.example.jetpackcomposedemoapp.MessageCardAndConversationScreen
 import com.example.jetpackcomposedemoapp.MultiSelectLazyColumn
@@ -38,6 +22,7 @@ import com.example.jetpackcomposedemoapp.ProfileHeaderAnimationScreen
 import com.example.jetpackcomposedemoapp.RememberWindowInfoLazyColumnScreen
 import com.example.jetpackcomposedemoapp.ScrollableColumn
 import com.example.jetpackcomposedemoapp.StartScreen
+import com.example.jetpackcomposedemoapp.TopAppBar
 
 @Composable
 fun Navigation() {
@@ -95,7 +80,19 @@ fun Navigation() {
                 }
             )
         ) { entry ->
-            DetailsScreen(name = entry.arguments?.getString("name"))
+            DetailsScreen(navController, name = entry.arguments?.getString("name"))
+        }
+        composable(route = Screen.AnimatedCounterScreen.route) {
+            AnimatedCounterScreen(navController)
+        }
+        composable(route = Screen.LazyGridScreen.route) {
+            LazyGrid(navController)
+        }
+        composable(route = Screen.TopAppBarScreen.route) {
+            TopAppBar(navController)
+        }
+        composable(route = Screen.BottomSheetScreen.route) {
+            BottomSheetScreen()
         }
     }
 }
