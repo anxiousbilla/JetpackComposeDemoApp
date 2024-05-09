@@ -1,3 +1,7 @@
+# Tutorial followed:
+[Jetpack Compose by Philipp Lackner](https://www.youtube.com/playlist?list=PLQkwcJG4YTCSpJ2NLhDTHhi6XBNfk9WiC)  
+[Android Official Jetpack Compose Documentation](https://developer.android.com/develop/ui/compose/documentation)
+
 ## What's in this jetpack compose demo app:
 - Text styles
 - Offset
@@ -21,10 +25,8 @@
 - LazyGrid
 - Top app bar and navigation drawer
 - Scaffold
-- Bottom sheet
+- Bottom sheet  
 
----
-
-### Not included, should be included:
+## Not included in this demo app code, should be included:
 - Snackbar
 - Pagination
