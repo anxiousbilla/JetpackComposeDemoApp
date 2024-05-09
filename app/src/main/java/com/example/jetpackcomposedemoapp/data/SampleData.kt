@@ -1,4 +1,6 @@
-package com.example.jetpackcomposedemoapp
+package com.example.jetpackcomposedemoapp.data
+
+import com.example.jetpackcomposedemoapp.Message
 
 object SampleData {
     // Sample conversation data

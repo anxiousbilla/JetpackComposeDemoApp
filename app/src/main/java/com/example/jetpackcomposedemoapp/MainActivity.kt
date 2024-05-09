@@ -1,6 +1,5 @@
 package com.example.jetpackcomposedemoapp
 
-import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -22,30 +21,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.Email
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material3.Badge
-import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -53,7 +38,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -63,7 +47,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.painterResource
@@ -72,7 +55,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -80,15 +62,14 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.example.jetpackcomposedemoapp.ui.theme.JetpackComposeDemoAppTheme
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import com.google.accompanist.permissions.rememberPermissionState
-import kotlin.random.Random
 import android.Manifest
+import androidx.compose.foundation.layout.offset
+import androidx.compose.material3.Button
 import androidx.compose.material3.Slider
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -96,16 +77,16 @@ import androidx.constraintlayout.compose.MotionLayout
 import androidx.constraintlayout.compose.MotionScene
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
-import com.example.jetpackcomposedemoapp.ui.LocalSpacing
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import com.example.jetpackcomposedemoapp.data.SampleData
+import com.example.jetpackcomposedemoapp.navigation.BottomNavigationBars
+import com.example.jetpackcomposedemoapp.navigation.Navigation
+import com.example.jetpackcomposedemoapp.navigation.Screen
 import com.example.jetpackcomposedemoapp.ui.spacing
-
-data class BottomNavigationItem(
-    val title: String,
-    val selectedIcon: ImageVector,
-    val unselectedIcon: ImageVector,
-    val hasNews: Boolean,
-    val badgeCount: Int? = null
-)
+import com.example.jetpackcomposedemoapp.utils.ListItem
+import com.example.jetpackcomposedemoapp.utils.WindowInfo
+import com.example.jetpackcomposedemoapp.utils.rememberWindowInfo
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -117,65 +98,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(MaterialTheme.spacing.small)
-//                        .padding(LocalSpacing.current.medium)
                 ) {
-//                        Box(modifier = Modifier
-//                            .padding(50.dp)
-//                            .background(Color.DarkGray)
-//                        ) {
-//                            Text(text = "Sam", color = Color.White)
-//                        }
-//                    Column {
-//                        Text(
-//                            text = "Obi", modifier = Modifier
-//                                .offset(40.dp, 22.dp)
-//                        )
-//                        Text(text = "Wan")
-//                        Conversation(messages = SampleData.conversationSample)
-//                        ImageCard(
-//                            painter = painterResource(id = R.drawable.ic_launcher_foreground),
-//                            contentDescription = "description",
-//                            title = "title"
-//                        )
-//                        FontStyles()
-//                        TextFieldsAndSnackBar()
-//                        ShowSnackBar()
-//                        ScrollableColumn()
-//                        LazyColumn()
-//                        ConstraintLayout()
-//                        CircularProgressBar(percentage = 0.8f, number = 100)
-//                        Navigation()
-//                    }
-//                    BottomNavigationBars()
-//                    MultiSelectLazyColumn()
-//                    PermissionsHandling()
-
-//                    val windowInfo = rememberWindowInfo()
-//                    if (windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact) {
-//                        Column {
-//                            RememberWindowInfoLazyColumn(1f, Color.Green)
-//                            RememberWindowInfoLazyColumn(1f, Color.Blue)
-//                        }
-//                    }
-//                    else {
-//                        Row {
-//                            RememberWindowInfoLazyColumn(0.5f, Color.Green)
-//                            RememberWindowInfoLazyColumn(1f, Color.Blue)
-//                        }
-//                    }
-
-                    Column {
-                        var progress by remember { mutableStateOf(0f) }
-                        ProfileHeaderAnimation(progress)
-                        Spacer(modifier = Modifier.height(32.dp))
-                        Slider(
-                            value = progress,
-                            onValueChange = {
-                                progress = it
-                            },
-                            modifier = Modifier.padding(horizontal = 32.dp)
-                        )
-                    }
+                    Navigation()
                 }
             }
         }
@@ -183,324 +107,106 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MessageCard(msg: Message) {
-    val color = remember { mutableStateOf(Color.Transparent) }
-
+fun Skeleton(navController: NavHostController, composableName: String, route: String) {
     Row(
-        modifier = Modifier
-            .padding(all = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Image(
-            painter = painterResource(R.drawable.ic_launcher_foreground),
-            contentDescription = "Profile picture",
-            modifier = Modifier
-                .size(40.dp)
-                .clip(CircleShape)
-                .background(color.value)
-                .border(1.5.dp, MaterialTheme.colorScheme.primary, CircleShape)
-                .clickable {
-                    color.value = Color(
-                        Random.nextFloat(),
-                        Random.nextFloat(),
-                        Random.nextFloat(),
-                        1f
-                    )
-                }
+        Text(
+            modifier = Modifier.padding(end = 50.dp), text = composableName
         )
-
-        Spacer(modifier = Modifier.width(8.dp))
-
-        var isExpanded by remember { mutableStateOf(false) }
-
-        Column(modifier = Modifier
-            .background(color.value)
-            .padding(all = 10.dp)
-            .clickable { isExpanded = !isExpanded }) {
-            Text(
-                text = msg.text,
-                color = MaterialTheme.colorScheme.secondary,
-                style = MaterialTheme.typography.titleSmall
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Surface(
-                shape = MaterialTheme.shapes.medium,
-                shadowElevation = 1.dp
-            ) {
-                Text(
-                    modifier = Modifier.padding(4.dp),
-                    text = msg.author,
-                    color = MaterialTheme.colorScheme.tertiary,
-                    style = MaterialTheme.typography.bodyMedium,
-                    maxLines = if (isExpanded) Int.MAX_VALUE else 1
-                )
-            }
+        Button(onClick = {
+            navController.navigate(route)
+        }) {
+            Text(text = "Next Screen")
         }
     }
-}
-
-@Preview(
-    name = "Light mode",
-    showBackground = true
-)
-@Composable
-private fun PreviewMessageCardLight() {
-    JetpackComposeDemoAppTheme {
-        Surface {
-            MessageCard(Message("Jetpack Compose", "Android"))
-        }
-    }
-}
-
-@Preview(
-    name = "Dark mode",
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES
-)
-@Composable
-private fun PreviewMessageCardDark() {
-    JetpackComposeDemoAppTheme {
-        Surface {
-            MessageCard(Message("Jetpack Compose", "Android"))
-        }
-    }
+    Spacer(modifier = Modifier.height(50.dp))
 }
 
 @Composable
-fun Conversation(messages: List<Message>) {
-    Text(text = "Conversation")
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
-        items(messages) { message ->
-            MessageCard(message)
-        }
-    }
-}
-
-@Preview
-@Composable
-fun PreviewConversation() {
-    Conversation(SampleData.conversationSample)
-}
-
-data class Message(val text: String, val author: String)
-
-@Composable
-fun ImageCard(
-    painter: Painter,
-    contentDescription: String,
-    title: String
-) {
-    Card(
-        modifier = Modifier
-            .fillMaxHeight(0.5f)
-            .fillMaxWidth(0.5f),
-        shape = RoundedCornerShape(15.dp)
+fun StartScreen(navController: NavHostController) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxSize()
     ) {
-        Box(
-            contentAlignment = Alignment.Center
+        Skeleton(navController, "Start Screen", Screen.LazyColumnScreen.route)
+        Text(
+            text = "Obi", modifier = Modifier
+                .offset(35.dp, 21.dp)
+        )
+        Text(text = "Wan")
+        Text(
+            modifier = Modifier.align(Alignment.CenterHorizontally), text = buildAnnotatedString {
+                withStyle(
+                    style = SpanStyle(Color.Green)
+                ) {
+                    append("J")
+                }
+                append("etpack")
+            }, color = Color.DarkGray, fontSize = 70.sp
+        )
+    }
+}
+
+@Composable
+fun LazyColumn(navController: NavHostController) {
+    Column(
+        modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Skeleton(navController, "LazyColumn", Screen.ScrollableColumnScreen.route)
+        LazyColumn(
+            modifier = Modifier
+                .background(Color.LightGray)
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(
-                painter = painter,
-                contentDescription = contentDescription,
-                contentScale = ContentScale.Crop,
-            )
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(
-                        Brush.verticalGradient(
-                            colors = listOf(
-                                Color.Transparent,
-                                Color.Black
-                            ),
-                            startY = 500f
-                        )
-                    )
-            )
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(10.dp),
-                contentAlignment = Alignment.BottomStart
-            ) {
-                Text(
-                    text = title,
-                    style = TextStyle(color = Color.White, fontSize = 20.sp)
-                )
+            items(50) {
+                Text(text = "Item $it")
             }
         }
     }
 }
 
 @Composable
-fun FontStyles() {
-    Text(
-        text = buildAnnotatedString {
-            withStyle(
-                style = SpanStyle(Color.Green)
-            ) {
-                append("J")
-            }
-            append("etpack")
-        },
-        color = Color.DarkGray,
-        fontSize = 50.sp
-    )
-}
-
-//@Composable
-//fun TextFieldsAndSnackBar() {
-//    var textFieldState by remember {
-//        mutableStateOf("")
-//    }
-//    val snackBarHostState = remember {
-//        SnackbarHostState()
-//    }
-//
-//    var snackbarVisible by remember { mutableStateOf(false) }
-//
-//
-//    Scaffold(
-//        modifier = Modifier.fillMaxSize(),
-////        scaffoldState = scaffoldState
-//    ) {
-//        Column(
-//            horizontalAlignment = Alignment.CenterHorizontally,
-//            verticalArrangement = Arrangement.Center,
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .padding(it)
-//        ) {
-//            TextField(
-//                value = textFieldState,
-//                label = {
-//                    Text(text = "Enter text")
-//                },
-//                onValueChange = { value ->
-//                    textFieldState = value
-//                },
-//                singleLine = true,
-//                modifier = Modifier.fillMaxWidth()
-//            )
-//            Spacer(modifier = Modifier.height(16.dp))
-//            Button(onClick = {
-//                snackbarVisible = true
-//            }) {
-//                Text(text = "Click")
-//            }
-//        }
-//
-//    }
-//}
-
-//@Composable
-//fun ShowSnackBar() {
-//    var textFieldState by remember { mutableStateOf("") }
-//    val scope = rememberCoroutineScope()
-//    val snackbarHostState = remember { SnackbarHostState() }
-//    Scaffold(
-//        snackbarHost = {
-//            SnackbarHost(hostState = snackbarHostState)
-//        },
-////        floatingActionButton = {
-////            ExtendedFloatingActionButton(
-////                text = { Text("Show snackbar") },
-////                icon = { Icon(Icons.Filled.AccountCircle, contentDescription = "") },
-////                onClick = {
-////                    scope.launch {
-////                        snackbarHostState.showSnackbar(textFieldState)
-////                    }
-////                }
-////            )
-////        },
-//    ) { contentPadding ->
-//        Column(
-//            horizontalAlignment = Alignment.CenterHorizontally,
-//            verticalArrangement = Arrangement.Center,
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .padding(contentPadding)
-//        ) {
-//            TextField(
-//                value = textFieldState,
-//                label = {
-//                    Text(text = "Enter text")
-//                },
-//                onValueChange = { value ->
-//                    textFieldState = value
-//                },
-//                singleLine = true,
-//                modifier = Modifier.fillMaxWidth()
-//            )
-//            Spacer(modifier = Modifier.height(16.dp))
-//            Button(onClick = {
-//                scope.launch {
-//                    snackbarHostState.showSnackbar("Snackbar")
-//                }
-//            }) {
-//                Text(text = "Click")
-//            }
-//        }
-//    }
-//}
-
-//@Composable
-//fun ShowSnackBar() {
-//    val scope = rememberCoroutineScope()
-//    val snackbarHostState = remember { SnackbarHostState() }
-//    Scaffold(
-//        snackbarHost = {
-//            SnackbarHost(hostState = snackbarHostState)
-//        },
-//        floatingActionButton = {
-//            ExtendedFloatingActionButton(
-//                text = { Text("Show snackbar") },
-//                icon = { Icon(Icons.Filled.AccountCircle, contentDescription = "") },
-//                onClick = {
-//                    scope.launch {
-//                        snackbarHostState.showSnackbar("Snackbar")
-//                    }
-//                }
-//            )
-//        },
-//    ) { contentPadding ->
-//        // Screen content
-//        Column(modifier = Modifier.padding(contentPadding)) {
-//
-//        }
-//    }
-//}
-
-@Composable
-fun ScrollableColumn() {
+fun ScrollableColumn(navController: NavHostController) {
     val scrollState = rememberScrollState()
     Column(
-        modifier = Modifier.verticalScroll(scrollState)
+        modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        for (i in 1..50) {
-            Text(text = "Item $i")
+        Skeleton(navController, "Scrollable Column", Screen.MessageCardAndConversationScreen.route)
+        Column(
+            modifier = Modifier
+                .background(Color.LightGray)
+                .fillMaxWidth()
+                .verticalScroll(scrollState), horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            for (i in 1..50) {
+                Text(text = "Item $i")
+            }
         }
     }
 }
 
 @Composable
-fun LazyColumn() {
-    LazyColumn {
-        items(50) {
-            Text(text = "Item $it")
-        }
+fun MessageCardAndConversationScreen(navController: NavHostController) {
+    Column(
+        modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Skeleton(
+            navController,
+            "MessageCardAnd\nConversationScreen",
+            Screen.ConstraintLayoutScreen.route
+        )
+        Conversation(messages = SampleData.conversationSample)
     }
 }
 
 @Composable
-fun ConstraintLayout() {
+fun MyConstraintLayout(navController: NavHostController) {
     val constraints = ConstraintSet {
         val greenBox = createRefFor("greenBox")
         val redBox = createRefFor("redBox")
+        val nextBtn = createRefFor("nextBtn")
         val guideline = createGuidelineFromTop(0.5f)
-
         constrain(greenBox) {
             top.linkTo(guideline)
             start.linkTo(parent.start)
@@ -513,12 +219,13 @@ fun ConstraintLayout() {
             width = Dimension.value(100.dp)
             height = Dimension.value(100.dp)
         }
+        constrain(nextBtn) {
+            bottom.linkTo(parent.bottom)
+        }
         createHorizontalChain(greenBox, redBox, chainStyle = ChainStyle.Packed)
     }
-
     androidx.constraintlayout.compose.ConstraintLayout(
-        constraints,
-        modifier = Modifier.fillMaxSize()
+        constraints, modifier = Modifier.fillMaxSize()
     ) {
         Box(
             modifier = Modifier
@@ -530,96 +237,66 @@ fun ConstraintLayout() {
                 .background(Color.Red)
                 .layoutId("redBox")
         )
-    }
-}
-
-@Composable
-fun CircularProgressBar(
-    percentage: Float,
-    number: Int,
-    fontSize: TextUnit = 28.sp,
-    radius: Dp = 50.dp,
-    color: Color = Color.Green,
-    strokeWidth: Dp = 8.dp,
-    animationDuration: Int = 1000,
-    animationDelay: Int = 0
-) {
-    Box(
-        modifier = Modifier
-            .padding(10.dp)
-    ) {
-        var animationPlayed by remember { mutableStateOf(false) }
-        val currentPercentage = animateFloatAsState(
-            targetValue = if (animationPlayed) percentage else 0f,
-            animationSpec = tween(
-                durationMillis = animationDuration,
-                delayMillis = animationDelay
-            ), label = ""
-        )
-        LaunchedEffect(key1 = true) {
-            animationPlayed = true
-        }
-
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier.size(radius * 2f)
+        Row(
+            modifier = Modifier
+                .layoutId("nextBtn")
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            Canvas(modifier = Modifier.size(radius * 2f)) {
-                drawArc(
-                    color = color,
-                    -90f,
-                    360 * currentPercentage.value,
-                    useCenter = false,
-                    style = Stroke(strokeWidth.toPx(), cap = StrokeCap.Round)
-                )
-            }
             Text(
-                text = (currentPercentage.value * number).toInt().toString(),
-                color = Color.Black,
-                fontSize = fontSize,
-                fontWeight = FontWeight.Bold
+                modifier = Modifier.padding(end = 50.dp), text = "ConstraintLayout"
             )
+            Button(onClick = {
+                navController.navigate(Screen.MultiSelectLazyColumnScreen.route)
+            }) {
+                Text(text = "Next Screen")
+            }
         }
     }
 }
 
 @Composable
-fun MultiSelectLazyColumn() {
+fun MultiSelectLazyColumn(navController: NavHostController) {
     var items by remember {
-        mutableStateOf(
-            (1..20).map {
-                ListItem(
-                    title = "Item $it",
-                    isSelected = false
-                )
-            }
-        )
+        mutableStateOf((1..20).map {
+            ListItem(
+                title = "Item $it", isSelected = false
+            )
+        })
     }
-
 //    items.filter { it.isSelected }
 
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
-        items(items.size) { i ->
-            Row(modifier = Modifier
-                .fillMaxWidth()
-                .clickable {
-                    items = items.mapIndexed { j, item ->
-                        if (i == j) {
-                            item.copy(isSelected = !item.isSelected)
-                        } else item
+    Column(
+        modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Skeleton(
+            navController, "MultiSelect LazyColumn", route = Screen.PermissionsHandlingScreen.route
+        )
+        LazyColumn(modifier = Modifier.fillMaxWidth()) {
+            items(items.size) { i ->
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.LightGray)
+                    .clickable {
+                        items = items.mapIndexed { j, item ->
+                            if (i == j) {
+                                item.copy(isSelected = !item.isSelected)
+                            } else item
+                        }
                     }
-                }
-                .padding(16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(text = items[i].title)
-                if (items[i].isSelected) {
-                    Icon(
-                        imageVector = Icons.Default.Check, contentDescription = "Selected",
-                        tint = Color.Green,
-                        modifier = Modifier.size(20.dp)
-                    )
+                    .padding(16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically) {
+                    Text(text = items[i].title)
+                    if (items[i].isSelected) {
+                        Icon(
+                            imageVector = Icons.Default.Check,
+                            contentDescription = "Selected",
+                            tint = Color.Green,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
                 }
             }
         }
@@ -628,68 +305,98 @@ fun MultiSelectLazyColumn() {
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun PermissionsHandling() {
+fun PermissionsHandling(navController: NavHostController) {
 //    val cameraPermissionState = rememberPermissionState(Manifest.permission.CAMERA)
     val permissionState = rememberMultiplePermissionsState(
         permissions = listOf(
-            Manifest.permission.CAMERA,
-            Manifest.permission.RECORD_AUDIO
+            Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO
         )
     )
-
     val lifecycleOwner = LocalLifecycleOwner.current
-    DisposableEffect(
-        key1 = lifecycleOwner,
-        effect = {
-            val observer = LifecycleEventObserver { _, event ->
-                if (event == Lifecycle.Event.ON_START) {
-                    permissionState.launchMultiplePermissionRequest()
-                }
+    DisposableEffect(key1 = lifecycleOwner, effect = {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_START) {
+                permissionState.launchMultiplePermissionRequest()
             }
-            lifecycleOwner.lifecycle.addObserver(observer)
-            onDispose {
-                lifecycleOwner.lifecycle.removeObserver(observer)
-            }
-        })
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    })
 
     Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        permissionState.permissions.forEach { permission ->
-            when (permission.permission) {
-                Manifest.permission.CAMERA -> {
-                    when {
-                        permission.hasPermission -> {
-                            Text(text = "Camera permission accepted.")
-                        }
+        Skeleton(
+            navController,
+            "Permissions Handling",
+            route = Screen.RememberWindowInfoLazyColumnScreen.route
+        )
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            permissionState.permissions.forEach { permission ->
+                when (permission.permission) {
+                    Manifest.permission.CAMERA -> {
+                        when {
+                            permission.hasPermission -> {
+                                Text(text = "Camera permission accepted.")
+                            }
 
-                        permission.shouldShowRationale -> {
-                            Text(text = "Camera permission needed.")
-                        }
+                            permission.shouldShowRationale -> {
+                                Text(text = "Camera permission needed.")
+                            }
 
-                        !permission.hasPermission && !permission.shouldShowRationale -> {
-                            Text(text = "Camera permission permanently denied.")
+                            !permission.hasPermission && !permission.shouldShowRationale -> {
+                                Text(text = "Camera permission permanently denied.")
+                            }
+                        }
+                    }
+
+                    Manifest.permission.RECORD_AUDIO -> {
+                        when {
+                            permission.hasPermission -> {
+                                Text(text = "Microphone permission accepted.")
+                            }
+
+                            permission.shouldShowRationale -> {
+                                Text(text = "Microphone permission needed.")
+                            }
+
+                            !permission.hasPermission && !permission.shouldShowRationale -> {
+                                Text(text = "Microphone permission permanently denied.")
+                            }
                         }
                     }
                 }
+            }
+        }
+    }
+}
 
-                Manifest.permission.RECORD_AUDIO -> {
-                    when {
-                        permission.hasPermission -> {
-                            Text(text = "Microphone permission accepted.")
-                        }
-
-                        permission.shouldShowRationale -> {
-                            Text(text = "Microphone permission needed.")
-                        }
-
-                        !permission.hasPermission && !permission.shouldShowRationale -> {
-                            Text(text = "Microphone permission permanently denied.")
-                        }
-                    }
-                }
+@Composable
+fun RememberWindowInfoLazyColumnScreen(navController: NavHostController) {
+    val windowInfo = rememberWindowInfo()
+    Column(
+        modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Skeleton(
+            navController,
+            "RememberWindowInfo\nLazyColumnScreen",
+            Screen.ProfileHeaderAnimationScreen.route
+        )
+        if (windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact) {
+            Column {
+                RememberWindowInfoLazyColumn(1f, Color.Green)
+                RememberWindowInfoLazyColumn(1f, Color.Blue)
+            }
+        } else {
+            Row {
+                RememberWindowInfoLazyColumn(0.5f, Color.Green)
+                RememberWindowInfoLazyColumn(1f, Color.Blue)
             }
         }
     }
@@ -709,13 +416,27 @@ fun RememberWindowInfoLazyColumn(width: Float, color: Color) {
 }
 
 @Composable
+fun ProfileHeaderAnimationScreen(navController: NavHostController) {
+    var progress by remember { mutableStateOf(0f) }
+    Column(
+        modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Skeleton(navController, "ProfileHeader\nAnimationScreen", Screen.ImageCardScreen.route)
+        ProfileHeaderAnimation(progress)
+        Spacer(modifier = Modifier.height(32.dp))
+        Slider(
+            value = progress, onValueChange = {
+                progress = it
+            }, modifier = Modifier.padding(horizontal = 32.dp)
+        )
+    }
+}
+
+@Composable
 fun ProfileHeaderAnimation(progress: Float) {
     val context = LocalContext.current
     val motionScene = remember {
-        context.resources
-            .openRawResource(R.raw.motion_scene)
-            .readBytes()
-            .decodeToString()
+        context.resources.openRawResource(R.raw.motion_scene).readBytes().decodeToString()
     }
     MotionLayout(
         motionScene = MotionScene(content = motionScene),
@@ -743,5 +464,171 @@ fun ProfileHeaderAnimation(progress: Float) {
             color = properties.color("background"),
             modifier = Modifier.layoutId("username")
         )
+    }
+}
+
+@Composable
+fun ImageCardScreen(navController: NavHostController) {
+    Column(
+        modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Skeleton(navController, "ImageCardScreen", route = Screen.CircularProgressBarScreen.route)
+        ImageCard(
+            painter = painterResource(id = R.drawable.ic_launcher_foreground),
+            contentDescription = "description",
+            title = "title"
+        )
+    }
+}
+
+@Composable
+fun ImageCard(
+    painter: Painter, contentDescription: String, title: String
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxHeight(0.5f)
+            .fillMaxWidth(0.5f),
+        shape = RoundedCornerShape(15.dp)
+    ) {
+        Box(
+            contentAlignment = Alignment.Center
+        ) {
+            Image(
+                painter = painter,
+                contentDescription = contentDescription,
+                contentScale = ContentScale.Crop,
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        Brush.verticalGradient(
+                            colors = listOf(
+                                Color.Transparent, Color.Black
+                            ), startY = 500f
+                        )
+                    )
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(10.dp),
+                contentAlignment = Alignment.BottomStart
+            ) {
+                Text(
+                    text = title, style = TextStyle(color = Color.White, fontSize = 20.sp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun CircularProgressBarScreen(navController: NavHostController) {
+    Column(
+        modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Skeleton(
+            navController,
+            "CircularProgressBar\nScreen",
+            Screen.BottomNavigationBarScreen.route
+        )
+        CircularProgressBar(percentage = 0.8f, number = 100)
+    }
+}
+
+@Composable
+fun CircularProgressBar(
+    percentage: Float,
+    number: Int,
+    fontSize: TextUnit = 28.sp,
+    radius: Dp = 50.dp,
+    color: Color = Color.Green,
+    strokeWidth: Dp = 8.dp,
+    animationDuration: Int = 1000,
+    animationDelay: Int = 0
+) {
+    Box(
+        modifier = Modifier.padding(10.dp)
+    ) {
+        var animationPlayed by remember { mutableStateOf(false) }
+        val currentPercentage = animateFloatAsState(
+            targetValue = if (animationPlayed) percentage else 0f, animationSpec = tween(
+                durationMillis = animationDuration, delayMillis = animationDelay
+            ), label = ""
+        )
+        LaunchedEffect(key1 = true) {
+            animationPlayed = true
+        }
+
+        Box(
+            contentAlignment = Alignment.Center, modifier = Modifier.size(radius * 2f)
+        ) {
+            Canvas(modifier = Modifier.size(radius * 2f)) {
+                drawArc(
+                    color = color,
+                    -90f,
+                    360 * currentPercentage.value,
+                    useCenter = false,
+                    style = Stroke(strokeWidth.toPx(), cap = StrokeCap.Round)
+                )
+            }
+            Text(
+                text = (currentPercentage.value * number).toInt().toString(),
+                color = Color.Black,
+                fontSize = fontSize,
+                fontWeight = FontWeight.Bold
+            )
+        }
+    }
+}
+
+@Composable
+fun BottomNavigationBarScreen(navController: NavHostController) {
+    Column(
+        modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Skeleton(navController, "BottomNavigationBar\nScreen", Screen.MainScreen.route)
+        BottomNavigationBars()
+    }
+}
+
+@Composable
+fun MainScreen(navController: NavController) {
+    var text by remember { mutableStateOf("") }
+    Column(
+        verticalArrangement = Arrangement.Center,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 50.dp)
+    ) {
+        TextField(
+            value = text, onValueChange = {
+                text = it
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Button(
+            onClick = {
+                navController.navigate(Screen.DetailsScreen.withArgs(text))
+            },
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        ) {
+            Text(text = "To DetailsScreen")
+        }
+    }
+}
+
+@Composable
+fun DetailsScreen(name: String?) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Text(text = "Hello $name")
     }
 }

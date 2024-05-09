@@ -1,4 +1,4 @@
-package com.example.jetpackcomposedemoapp
+package com.example.jetpackcomposedemoapp.utils
 
 data class ListItem(
     val title: String,

@@ -1,4 +1,4 @@
-package com.example.jetpackcomposedemoapp
+package com.example.jetpackcomposedemoapp.utils
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalConfiguration
