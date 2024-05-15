@@ -25,8 +25,8 @@
 - LazyGrid
 - Top app bar and navigation drawer
 - Scaffold
-- Bottom sheet  
+- Bottom sheet
+- SnackBar
 
 ## Not included in this demo app code, should be included:
-- Snackbar
 - Pagination
