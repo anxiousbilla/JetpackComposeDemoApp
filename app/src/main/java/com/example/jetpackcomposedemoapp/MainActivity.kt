@@ -39,6 +39,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
@@ -47,12 +48,15 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -72,6 +76,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.painter.Painter
@@ -822,7 +827,7 @@ fun TopAppBar(navController: NavHostController) {
 }
 
 @Composable
-fun BottomSheetScreen() {
+fun BottomSheetScreen(navController: NavHostController) {
     var showBottomSheet by remember {
         mutableStateOf(false)
     }
@@ -835,10 +840,11 @@ fun BottomSheetScreen() {
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
-        Box(
+        Column(
             modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.TopCenter
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Skeleton(navController, "BottomSheetScreen", Screen.SnackBarScreen.route)
             Button(onClick = {
                 showBottomSheet = true
             }) {
@@ -901,3 +907,48 @@ fun BottomSheet(onDismiss: () -> Unit) {
 //        }
 //    }
 //}
+
+@Composable
+fun ShowSnackBar(navController: NavHostController) {
+    val scope = rememberCoroutineScope()
+    val snackBarHostState = remember { SnackbarHostState() }
+    var textFieldText by remember { mutableStateOf("") }
+    Scaffold(
+        modifier = Modifier.fillMaxWidth(),
+        snackbarHost = { SnackbarHost(hostState = snackBarHostState) },
+        //  We can use floatingActionButton to show a button or use a custom button
+        floatingActionButton = {
+            ExtendedFloatingActionButton(
+                text = { Text("Show SnackBar") },
+                icon = { Icon(imageVector = Icons.Filled.Done, "SnackBar Icon") },
+                shape = RoundedCornerShape(100),
+                containerColor = Color.Black,
+                contentColor = Color.White,
+                onClick = {
+                    scope.launch {
+                        snackBarHostState.showSnackbar("floatingActionButton")
+                    }
+                }
+            )
+        }
+    ) { innerPadding ->
+        // Here we have a custom button and textField
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(innerPadding),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Skeleton(navController, "SnackBar Screen", Screen.StartScreen.route)
+            TextField(value = textFieldText, onValueChange = { textFieldText = it })
+            Button(
+                onClick = {
+                    scope.launch {
+                        snackBarHostState.showSnackbar(textFieldText)
+                    }
+                }) {
+                Text(text = "Show SnackBar")
+            }
+        }
+    }
+}

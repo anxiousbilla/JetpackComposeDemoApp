@@ -21,6 +21,7 @@ import com.example.jetpackcomposedemoapp.PermissionsHandling
 import com.example.jetpackcomposedemoapp.ProfileHeaderAnimationScreen
 import com.example.jetpackcomposedemoapp.RememberWindowInfoLazyColumnScreen
 import com.example.jetpackcomposedemoapp.ScrollableColumn
+import com.example.jetpackcomposedemoapp.ShowSnackBar
 import com.example.jetpackcomposedemoapp.StartScreen
 import com.example.jetpackcomposedemoapp.TopAppBar
 
@@ -92,7 +93,10 @@ fun Navigation() {
             TopAppBar(navController)
         }
         composable(route = Screen.BottomSheetScreen.route) {
-            BottomSheetScreen()
+            BottomSheetScreen(navController)
+        }
+        composable(route = Screen.SnackBarScreen.route) {
+            ShowSnackBar(navController)
         }
     }
 }
