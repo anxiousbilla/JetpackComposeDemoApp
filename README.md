@@ -27,6 +27,7 @@
 - Scaffold
 - Bottom sheet
 - SnackBar
+- Api call with jetpack compose
 
 ## Not included in this demo app code, should be included:
 - Pagination
