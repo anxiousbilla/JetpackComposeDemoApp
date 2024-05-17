@@ -939,7 +939,7 @@ fun ShowSnackBar(navController: NavHostController) {
                 .padding(innerPadding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Skeleton(navController, "SnackBar Screen", Screen.StartScreen.route)
+            Skeleton(navController, "SnackBar Screen", Screen.GetApiDataScreen.route)
             TextField(value = textFieldText, onValueChange = { textFieldText = it })
             Button(
                 onClick = {

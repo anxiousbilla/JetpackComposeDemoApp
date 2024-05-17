@@ -24,6 +24,8 @@ import com.example.jetpackcomposedemoapp.ScrollableColumn
 import com.example.jetpackcomposedemoapp.ShowSnackBar
 import com.example.jetpackcomposedemoapp.StartScreen
 import com.example.jetpackcomposedemoapp.TopAppBar
+import com.example.jetpackcomposedemoapp.api.ApiViewModel
+import com.example.jetpackcomposedemoapp.api.GetApiData
 
 @Composable
 fun Navigation() {
@@ -97,6 +99,9 @@ fun Navigation() {
         }
         composable(route = Screen.SnackBarScreen.route) {
             ShowSnackBar(navController)
+        }
+        composable(route = Screen.GetApiDataScreen.route) {
+            GetApiData(ApiViewModel(), navController)
         }
     }
 }

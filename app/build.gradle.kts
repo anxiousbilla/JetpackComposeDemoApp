@@ -70,4 +70,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout.compose.android)
     implementation(libs.androidx.navigation.compose)
     implementation("com.google.accompanist:accompanist-permissions:0.21.1-beta")
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("io.coil-kt:coil-compose:2.1.0")
 }
